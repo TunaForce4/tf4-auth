@@ -28,16 +28,34 @@ ext {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // ===== Core: Spring Boot Starters =====
+    implementation 'org.springframework.boot:spring-boot-starter-web'          // 웹 MVC, 내장 톰캣, JSON 처리
+    implementation 'org.springframework.boot:spring-boot-starter-security'     // 스프링 시큐리티
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'     // 헬스체크/메트릭/운영 엔드포인트
+
+    // ===== Persistence / Data Access =====
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'     // JPA/Hibernate
+    runtimeOnly   'org.postgresql:postgresql'                                   // PostgreSQL JDBC 드라이버
+
+    // ===== Cloud / Service Discovery =====
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client' // 유레카 클라이언트
+
+    // ===== Auth / JWT =====
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'        // JJWT API 선언부
+    runtimeOnly  'io.jsonwebtoken:jjwt-impl:0.12.3'         // JJWT 구현체(서명/파싱)
+    runtimeOnly  'io.jsonwebtoken:jjwt-jackson:0.12.3'      // JJWT JSON 직렬화(Jackson)
+
+    // ===== Build-time Tools =====
+    compileOnly         'org.projectlombok:lombok'          // Lombok(컴파일 시)
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // ===== Test =====
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'     // JUnit/AssertJ/Mockito 등
+    testImplementation 'org.springframework.security:spring-security-test'     // 시큐리티 테스트 유틸
+    testRuntimeOnly   'org.junit.platform:junit-platform-launcher'             // 테스트 런처(런타임)
 }
+
+
 
 dependencyManagement {
 	imports {
