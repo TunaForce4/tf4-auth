@@ -1,0 +1,48 @@
+package com.tunaforce.auth.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
+
+@Entity
+@Getter
+@NoArgsConstructor
+@Table(name = "p_user")
+public class User extends Timestamped{
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id", unique = true, nullable = false, updatable = false)
+    private UUID userId;
+
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
+
+    @Column(name = "slack_id")
+    private String slackId;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String tel;
+
+    @Builder
+    public User(String username, String password, UserRole role, String slackId, String tel) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.slackId = slackId;
+        this.tel = tel;
+    }
+}
