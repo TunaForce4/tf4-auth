@@ -19,6 +19,10 @@ public class User extends Timestamped{
     private UUID userId;
 
     @NotBlank
+    @Column(name = "user_login_id", unique = true, nullable = false, updatable = false)
+    private String userLoginId;
+
+    @NotBlank
     @Column(unique = true, nullable = false)
     private String username;
 
@@ -38,7 +42,8 @@ public class User extends Timestamped{
     private String tel;
 
     @Builder
-    public User(String username, String password, UserRole role, String slackId, String tel) {
+    public User(String userLoginId, String username, String password, UserRole role, String slackId, String tel) {
+        this.userLoginId = userLoginId;
         this.username = username;
         this.password = password;
         this.role = role;
