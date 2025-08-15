@@ -3,6 +3,7 @@ package com.tunaforce.auth.dto.request;
 import com.tunaforce.auth.entity.UserRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 
 /**
@@ -22,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 public record SignUpRequestDto(
 	@NotBlank String name,
 	@NotBlank String userLoginId,
-	@NotBlank String password,
+	@NotBlank @Pattern(regexp = "^.{8,}$", message = "비밀번호는 최소 8자 이상이어야합니다.") String password,
 	@NotNull UserRole role,
 	String deptId,
 	String slackId,
