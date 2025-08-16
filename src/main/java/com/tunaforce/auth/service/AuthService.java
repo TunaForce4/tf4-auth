@@ -43,6 +43,7 @@ public class AuthService {
         );
 
         return new LoginResponseDto(Jwts.builder()
+                .claim("id", user.getUserId().toString())
                 .claim("username", user.getUsername())
                 .issuer(issuer)
                 .issuedAt(new Date(System.currentTimeMillis()))
