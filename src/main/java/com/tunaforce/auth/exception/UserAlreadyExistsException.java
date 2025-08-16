@@ -2,6 +2,6 @@ package com.tunaforce.auth.exception;
 
 public class UserAlreadyExistsException extends RuntimeException {
     public UserAlreadyExistsException() {
-        super("User already exists");
+        super("이미 등록된 id입니다.");
     }
 }

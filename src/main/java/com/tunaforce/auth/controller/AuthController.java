@@ -1,7 +1,9 @@
 package com.tunaforce.auth.controller;
 
+import com.tunaforce.auth.dto.request.IdCheckRequestDto;
 import com.tunaforce.auth.dto.request.LoginRequestDto;
 import com.tunaforce.auth.dto.request.SignUpRequestDto;
+import com.tunaforce.auth.dto.response.IdCheckResponseDto;
 import com.tunaforce.auth.dto.response.LoginResponseDto;
 import com.tunaforce.auth.service.AuthService;
 import jakarta.validation.Valid;
@@ -31,5 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/id")
-    public ResponseEntity<>
+    public ResponseEntity<IdCheckResponseDto> idCheck(@RequestBody IdCheckRequestDto request) {
+        return ResponseEntity.ok(authService.checkId(request.userLoginId()));
+    }
 }

@@ -2,6 +2,7 @@ package com.tunaforce.auth.service;
 
 import com.tunaforce.auth.dto.request.LoginRequestDto;
 import com.tunaforce.auth.dto.request.SignUpRequestDto;
+import com.tunaforce.auth.dto.response.IdCheckResponseDto;
 import com.tunaforce.auth.dto.response.LoginResponseDto;
 import com.tunaforce.auth.entity.User;
 import com.tunaforce.auth.exception.LoginIdNotFoundException;
@@ -77,5 +78,12 @@ public class AuthService {
                 .role(dto.role())
                 .slackId(dto.slackId())
                 .build();
+    }
+
+    public IdCheckResponseDto checkId(String loginId) {
+        if (existsByLoginId(loginId)) {
+            throw new UserAlreadyExistsException();
+        }
+        return new IdCheckResponseDto("사용 가능한 Id 입니다.");
     }
 }
