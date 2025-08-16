@@ -1,6 +1,8 @@
 package com.tunaforce.auth.controller;
 
+import com.tunaforce.auth.dto.request.LoginRequestDto;
 import com.tunaforce.auth.dto.request.SignUpRequestDto;
+import com.tunaforce.auth.dto.response.LoginResponseDto;
 import com.tunaforce.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,14 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequestDto request) {
         authService.signUp(request);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request) {
+        return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/id")
+    public ResponseEntity<>
 }
