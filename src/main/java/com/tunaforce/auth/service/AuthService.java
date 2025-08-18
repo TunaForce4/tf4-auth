@@ -4,9 +4,11 @@ import com.tunaforce.auth.dto.request.LoginRequestDto;
 import com.tunaforce.auth.dto.request.SignUpRequestDto;
 import com.tunaforce.auth.dto.response.IdCheckResponseDto;
 import com.tunaforce.auth.dto.response.LoginResponseDto;
+import com.tunaforce.auth.dto.response.UserInfoResponseDto;
 import com.tunaforce.auth.entity.User;
 import com.tunaforce.auth.exception.LoginIdNotFoundException;
 import com.tunaforce.auth.exception.UserAlreadyExistsException;
+import com.tunaforce.auth.exception.UserNotFoundException;
 import com.tunaforce.auth.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -45,6 +48,7 @@ public class AuthService {
         return new LoginResponseDto(Jwts.builder()
                 .claim("id", user.getUserId().toString())
                 .claim("username", user.getUsername())
+                .claim("role", user.getRole().toString())
                 .issuer(issuer)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessExpiration))
@@ -86,5 +90,12 @@ public class AuthService {
             throw new UserAlreadyExistsException();
         }
         return new IdCheckResponseDto("사용 가능한 Id 입니다.");
+    }
+
+    public UserInfoResponseDto getUserInfo(String id) {
+        return UserInfoResponseDto.from(
+                userRepository.findById(UUID.fromString(id))
+                        .orElseThrow(UserNotFoundException::new)
+        );
     }
 }
