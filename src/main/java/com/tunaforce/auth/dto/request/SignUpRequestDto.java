@@ -15,7 +15,6 @@ import jakarta.validation.constraints.Pattern;
  *   "userLoginId": "id",
  *   "password": "비밀번호",
  *   "role": "MASTER | COMPANY | HUB | DELIVERY",
- *   "deptId": "업체/허브 ID (nullable)",
  *   "slackId": "슬랙Id (nullable)",
  *   "tel": "전화번호"
  * }
