@@ -14,6 +14,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${service.application.name}")
+    @Value("${spring.application.name}")
     private String issuer;
 
     @Value("${service.jwt.access-expiration}")
@@ -36,10 +37,12 @@ public class AuthService {
 
     public AuthService(UserRepository userRepository, @Value("${service.jwt.secret-key}") String secretKey, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
+        // 현재 설정은 표준 Base64 문자열('+', '/') 가능
+        this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         User user = userRepository.findByUserLoginId(loginRequestDto.userLoginId()).orElseThrow(
                 () -> new LoginIdNotFoundException(loginRequestDto.userLoginId())
@@ -56,6 +59,7 @@ public class AuthService {
         );
     }
 
+    @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto) {
         // 중복 계정 체크 (userLoginId 기준)
         if (existsByLoginId(signUpRequestDto.userLoginId())) {
@@ -91,6 +95,7 @@ public class AuthService {
         return new IdCheckResponseDto("사용 가능한 Id 입니다.");
     }
 
+    @Transactional(readOnly = true)
     public UserInfoResponseDto getUserInfo(String id) {
         return UserInfoResponseDto.from(
                 userRepository.findById(UUID.fromString(id))
