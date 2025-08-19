@@ -2,6 +2,7 @@ package com.tunaforce.auth.exception;
 
 import com.tunaforce.auth.dto.response.FieldErrorDetail;
 import com.tunaforce.auth.dto.response.ValidationErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -57,6 +58,79 @@ public class GlobalExceptionHandler {
                 ex.getErrors()
         );
         return ResponseEntity.status(442).body(body);
+    }
+
+    /**
+     * 아이디 중복 예외 → 409 Conflict로 변환
+     */
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ValidationErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex) {
+        ValidationErrorResponse body = new ValidationErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "USER_ALREADY_EXISTS",
+                ex.getMessage(),
+                List.of()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
+    /**
+     * 로그인 아이디 미존재 → 404 Not Found
+     */
+    @ExceptionHandler(LoginIdNotFoundException.class)
+    public ResponseEntity<ValidationErrorResponse> handleLoginIdNotFound(LoginIdNotFoundException ex) {
+        ValidationErrorResponse body = new ValidationErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "LOGIN_ID_NOT_FOUND",
+                ex.getMessage(),
+                List.of()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    /**
+     * 사용자 미존재 → 404 Not Found
+     */
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ValidationErrorResponse> handleUserNotFound(UserNotFoundException ex) {
+        ValidationErrorResponse body = new ValidationErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "USER_NOT_FOUND",
+                ex.getMessage(),
+                List.of()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    /**
+     * 잘못된 요청 파라미터 등 일반적인 클라이언트 오류
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ValidationErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+    ValidationErrorResponse body = new ValidationErrorResponse(
+        HttpStatus.BAD_REQUEST.value(),
+        "BAD_REQUEST",
+        ex.getMessage(),
+        List.of()
+    );
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    /**
+     * 그 밖의 모든 예외에 대한 마지막 방어선: 기본 500 + 원본 메시지 전달
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ValidationErrorResponse> handleAny(Exception ex) {
+    String message = (ex.getMessage() == null || ex.getMessage().isBlank())
+        ? "내부 서버 오류가 발생했습니다."
+        : ex.getMessage();
+    ValidationErrorResponse body = new ValidationErrorResponse(
+        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+        "INTERNAL_SERVER_ERROR",
+        message,
+        List.of()
+    );
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 
     /**
