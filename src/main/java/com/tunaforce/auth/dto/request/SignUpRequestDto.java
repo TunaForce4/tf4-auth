@@ -25,7 +25,6 @@ public record SignUpRequestDto(
 	@NotBlank String userLoginId,
 	@NotBlank @Pattern(regexp = "^.{8,}$", message = "비밀번호는 최소 8자 이상이어야합니다.") String password,
 	@NotNull UserRole role,
-	String deptId,
 	String slackId,
 	@NotBlank String tel
 ) {
