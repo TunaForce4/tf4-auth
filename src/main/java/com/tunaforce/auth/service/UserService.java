@@ -60,6 +60,16 @@ public class UserService {
     public void deleteUser(String userId) {
         User user = userRepository.findById(UUID.fromString(userId)).orElseThrow(UserNotFoundException::new);
 
-//        user.delete();
+    @Transactional
+    public void deleteUser(String userId) {
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(userId);
+        } catch (IllegalArgumentException e) {
+            throw new UserNotFoundException();
+        }
+        User user = userRepository.findById(uuid).orElseThrow(UserNotFoundException::new);
+        user.delete(uuid);
+        userRepository.save(user);
     }
 }
