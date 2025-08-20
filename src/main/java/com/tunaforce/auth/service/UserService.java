@@ -53,14 +53,7 @@ public class UserService {
         if (dto.password() != null && !dto.password().isBlank()) {
             encodedPassword = passwordEncoder.encode(dto.password());
         }
-        UserRole newRole = null;
-        if (dto.role() != null && !dto.role().isBlank()) {
-            try {
-                newRole = UserRole.fromString(dto.role());
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("유효하지 않은 역할입니다: " + dto.role());
-            }
-        }
+        UserRole newRole = dto.role();
         user.updateInfo(dto.name(), encodedPassword, newRole, dto.slackId(), dto.tel());
     }
 
