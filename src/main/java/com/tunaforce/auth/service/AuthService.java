@@ -50,6 +50,7 @@ public class AuthService {
 
         return new LoginResponseDto(Jwts.builder()
                 .subject(user.getUserId().toString())
+                .claim("id", user.getUserId().toString())
                 .claim("role", user.getRole().toString())
                 .issuer(issuer)
                 .issuedAt(new Date(System.currentTimeMillis()))
