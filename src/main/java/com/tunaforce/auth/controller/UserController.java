@@ -2,7 +2,6 @@ package com.tunaforce.auth.controller;
 
 import com.tunaforce.auth.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,20 +19,18 @@ public class UserController {
 
     // TODO: edit user info
 
-    // 게이트웨이 헤더 기반 자기 계정 삭제
+    // 자기 계정 삭제(게이트웨이가 X-User-Id 제공)
     @DeleteMapping()
     public ResponseEntity<Void> removeAccount(
-            @RequestHeader(value = "X-User-Id", required = false) String userIdHeader,
-            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String token
+            @RequestHeader(value = "X-User-Id") String userIdHeader
     ) {
-        userService.removeAccountByHeader(userIdHeader);
-
+        userService.deleteByUserId(userIdHeader);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable(value = "userId") String userId) {
-        userService.deleteUser(userId);
+        userService.deleteByUserId(userId);
         return ResponseEntity.ok().build();
     }
 }
