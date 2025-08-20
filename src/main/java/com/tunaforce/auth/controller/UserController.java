@@ -1,5 +1,6 @@
 package com.tunaforce.auth.controller;
 
+import com.tunaforce.auth.dto.request.UserInfoEditRequestDto;
 import com.tunaforce.auth.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,15 @@ public class UserController {
     // TODO: get my info
 
     // TODO: edit user info
+    @PatchMapping("/{userId}")
+    public ResponseEntity<Void> editUserInfo(
+            @RequestBody UserInfoEditRequestDto dto,
+            @PathVariable(value = "userId") String userId,
+            @RequestHeader(value = "X-Roles") String role
+    ) {
+        userService.editUserInfo(dto, userId, role);
+        return ResponseEntity.ok().build();
+    }
 
     // 자기 계정 삭제(게이트웨이가 X-User-Id 제공)
     @DeleteMapping()

@@ -103,6 +103,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 권한 없음 → 403 Forbidden
+     */
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ValidationErrorResponse> handleForbidden(ForbiddenException ex) {
+        ValidationErrorResponse body = new ValidationErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                "FORBIDDEN",
+                ex.getMessage(),
+                List.of()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+    }
+
+    /**
      * 잘못된 요청 파라미터 등 일반적인 클라이언트 오류
      */
     @ExceptionHandler(IllegalArgumentException.class)
