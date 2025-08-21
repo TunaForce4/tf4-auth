@@ -2,6 +2,7 @@ package com.tunaforce.auth.dto.response;
 
 import com.tunaforce.auth.entity.User;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record UserInfoResponseDto(
@@ -10,7 +11,9 @@ public record UserInfoResponseDto(
         String username,
         String role,
         String slackId,
-        String tel
+        String tel,
+        LocalDateTime deletedAt,
+    UUID deletedBy
 ) {
     public static UserInfoResponseDto from(User user) {
         return new UserInfoResponseDto(
@@ -19,7 +22,9 @@ public record UserInfoResponseDto(
                 user.getUsername(),
                 user.getRole().name(),   // Enum → String
                 user.getSlackId(),
-                user.getTel()
+                user.getTel(),
+                user.getDeletedAt(),
+                user.getDeletedBy()
         );
     }
 }
