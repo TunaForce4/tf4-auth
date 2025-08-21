@@ -1,7 +1,5 @@
 # 발표 예상 Q&A (Auth / Gateway / Company)
 
-발표와 README를 바탕으로 나올 법한 질문과 간단 답변을 정리했습니다. 모듈별 5문항입니다.
-
 ---
 
 ## Auth
