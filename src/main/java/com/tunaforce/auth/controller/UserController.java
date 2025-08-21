@@ -19,19 +19,16 @@ public class UserController {
 
     @GetMapping()
     public ResponseEntity<UserInfoListResponseDto> searchUsers(
-            @RequestParam(value = "name", required = false) String name,
-            @RequestHeader(value = "X-Roles") UserRole headerRoles
+            @RequestParam(value = "name", required = false) String name
     ){
-        return ResponseEntity.ok(userService.searchUsers(name, headerRoles));
+        return ResponseEntity.ok(userService.searchUsers(name));
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserInfoResponseDto> getUserInfo(
-            @PathVariable UUID userId,
-            @RequestHeader(value = "X-User-Id") UUID headerUserId,
-            @RequestHeader(value = "X-Roles") UserRole headerRoles
+            @PathVariable UUID userId
     ) {
-        return ResponseEntity.ok(userService.getUserInfo(userId, headerUserId, headerRoles));
+        return ResponseEntity.ok(userService.getUserInfo(userId));
     }
 
     @PatchMapping("/{userId}")

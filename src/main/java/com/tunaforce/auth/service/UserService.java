@@ -58,25 +58,14 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserInfoResponseDto getUserInfo(UUID userId, UUID headerUserId, UserRole headerRoles) {
-        // 헤더 사용자 ID 필수 (UUID라 공백 체크 불필요)
-        if (headerUserId == null) {
-            throw new ForbiddenException();
-        }
-
-        if (checkSelfOrMaster(userId, headerUserId, headerRoles)) {
-            throw new ForbiddenException();
-        }
-
+    public UserInfoResponseDto getUserInfo(UUID userId) {
         return UserInfoResponseDto.from(
                 userRepository.findById(userId).orElseThrow(UserNotFoundException::new)
         );
     }
 
     @Transactional(readOnly = true)
-    public UserInfoListResponseDto searchUsers(String name, UserRole headerRoles) {
-        // MASTER만 접근
-        requireMaster(headerRoles);
+    public UserInfoListResponseDto searchUsers(String name) {
 
         String normalizedName = (name == null || name.isBlank()) ? null : name;
 
