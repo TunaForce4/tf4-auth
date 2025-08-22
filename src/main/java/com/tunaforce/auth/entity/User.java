@@ -50,4 +50,23 @@ public class User extends Timestamped{
         this.slackId = slackId;
         this.tel = tel;
     }
+
+    /**
+     * 사용자 정보 업데이트: 비밀번호는 null/blank가 아니면 교체
+     */
+    public void updateInfo(String username, String encodedPasswordOrNull, UserRole role, String slackId, String tel) {
+        if (username != null && !username.isBlank()) {
+            this.username = username;
+        }
+        if (encodedPasswordOrNull != null && !encodedPasswordOrNull.isBlank()) {
+            this.password = encodedPasswordOrNull;
+        }
+        if (role != null) {
+            this.role = role;
+        }
+        this.slackId = slackId; // nullable allowed
+        if (tel != null && !tel.isBlank()) {
+            this.tel = tel;
+        }
+    }
 }

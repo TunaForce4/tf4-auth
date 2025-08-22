@@ -4,6 +4,7 @@ import com.tunaforce.auth.dto.response.FieldErrorDetail;
 import com.tunaforce.auth.dto.response.ValidationErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -44,6 +45,25 @@ public class GlobalExceptionHandler {
         );
         // 프로젝트 정책에 따라 상태 코드 442로 반환(표준 400/422 대신)
         return ResponseEntity.status(442).body(body);
+    }
+
+    /**
+     * JSON 바인딩/역직렬화 오류 → 400 Bad Request
+     * (잘못된 enum 값 등)
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ValidationErrorResponse> handleNotReadable(HttpMessageNotReadableException ex) {
+        ex.getMostSpecificCause();
+        String message = ex.getMostSpecificCause().getMessage() != null
+            ? ex.getMostSpecificCause().getMessage()
+            : "요청 본문을 해석할 수 없습니다.";
+    ValidationErrorResponse body = new ValidationErrorResponse(
+        HttpStatus.BAD_REQUEST.value(),
+        "BAD_REQUEST",
+        message,
+        List.of()
+    );
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
     /**
@@ -100,6 +120,20 @@ public class GlobalExceptionHandler {
                 List.of()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    /**
+     * 권한 없음 → 403 Forbidden
+     */
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ValidationErrorResponse> handleForbidden(ForbiddenException ex) {
+        ValidationErrorResponse body = new ValidationErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                "FORBIDDEN",
+                ex.getMessage(),
+                List.of()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
     }
 
     /**
